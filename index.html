@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日语词典 PWA</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h2>日语词典 PWA</h2>
+
+  <input type="file" id="csvFile" accept=".csv">
+  <button onclick="importCSV()">导入 CSV</button>
+
+  <input type="text" id="search" placeholder="输入日语或中文" oninput="doSearch()">
+
+  <div id="results"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
