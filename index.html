@@ -9,14 +9,54 @@
 </head>
 
 <body>
-  <h2>日语词典 PWA</h2>
+  <div class="header">
+    <h2>日语刷词 PWA</h2>
+    <div class="tabs">
+      <button id="searchTab" class="active" onclick="switchMode('search')">搜索模式</button>
+      <button id="flashcardTab" onclick="switchMode('flashcards')">刷词模式</button>
+    </div>
+  </div>
 
-  <input type="file" id="csvFile" accept=".csv">
-  <button onclick="importCSV()">导入 CSV</button>
+  <div id="search-mode">
+    <div class="controls">
+      <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSV()">
+      <button class="primary-btn" onclick="document.getElementById('csvFile').click()">导入 CSV</button>
+      <input type="text" id="search" placeholder="输入日语或中文搜索..." oninput="doSearch()">
+    </div>
+    <div id="results">
+      <div class="empty-state">
+        <p>还没有单词，请先导入 CSV 文件</p>
+      </div>
+    </div>
+  </div>
 
-  <input type="text" id="search" placeholder="输入日语或中文" oninput="doSearch()">
+  <div id="flashcard-mode" style="display: none;">
+    <div class="flashcard-header">
+      <span id="progress">0 / 0</span>
+      <button class="primary-btn" onclick="startFlashcards()">打乱并开始</button>
+    </div>
+    
+    <div id="card" class="card" onclick="toggleAnswer()">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="voice-btn-container">
+            <button class="voice-btn" onclick="event.stopPropagation(); playCurrentWord()">🔊</button>
+          </div>
+          <div id="word-main">点击开始</div>
+          <div id="word-sub"></div>
+        </div>
+        <div class="card-back">
+          <div id="word-chinese"></div>
+          <div id="word-reading"></div>
+        </div>
+      </div>
+    </div>
 
-  <div id="results"></div>
+    <div class="card-controls">
+      <button onclick="prevCard()">上一个</button>
+      <button class="next-btn" onclick="nextCard()">下一个</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
