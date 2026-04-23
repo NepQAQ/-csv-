@@ -17,12 +17,26 @@
     <div class="tabs">
       <button id="searchTab" class="active" onclick="switchMode('search')">搜索模式</button>
       <button id="flashcardTab" onclick="switchMode('flashcards')">刷词模式</button>
+      <button id="gojuonTab" onclick="switchMode('gojuon')">五十音图</button>
       <button id="libraryTab" onclick="switchMode('library')">词库管理</button>
     </div>
   </div>
 
   <div id="library-info" class="current-library-bar">
     当前词库: <span id="current-library-name">未选择</span>
+  </div>
+
+  <div id="gojuon-mode" style="display: none;">
+    <div class="gojuon-container">
+      <div class="gojuon-tabs">
+        <button class="active" onclick="switchGojuonType('seion')">清音</button>
+        <button onclick="switchGojuonType('dakuon')">浊音/半浊音</button>
+        <button onclick="switchGojuonType('youon')">拗音</button>
+      </div>
+      <div id="gojuon-grid" class="gojuon-grid">
+        <!-- 五十音图将通过 JS 动态生成 -->
+      </div>
+    </div>
   </div>
 
   <div id="search-mode">

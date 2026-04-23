@@ -143,7 +143,7 @@ body {
   font-weight: 600;
 }
 
-#search-mode, #flashcard-mode, #library-mode {
+#search-mode, #flashcard-mode, #library-mode, #gojuon-mode {
   padding: 10px 15px; /* 缩小 padding */
   max-width: 600px;
   margin: 0 auto;
@@ -151,6 +151,104 @@ body {
   box-sizing: border-box;
   flex: 1;
   overflow-y: auto;
+}
+
+/* 五十音图样式 */
+.gojuon-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
+.gojuon-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--tab-inactive);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.gojuon-tabs button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-sub);
+  transition: all 0.2s;
+}
+
+.gojuon-tabs button.active {
+  background: var(--card-bg);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.gojuon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding-bottom: 20px;
+}
+
+.gojuon-item {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  border: 1px solid var(--tab-inactive); /* 在深色模式下更清晰 */
+}
+
+.gojuon-item:active {
+  transform: scale(0.95);
+  background: var(--lib-active-bg);
+}
+
+.gojuon-item.empty {
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+.kana-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.kana-main {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.kana-sub {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
+
+.kana-romaji {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+@media (max-width: 360px) {
+  .kana-main { font-size: 1.2rem; }
+  .kana-sub { font-size: 0.8rem; }
+  .gojuon-grid { gap: 5px; }
 }
 
 .controls {
@@ -176,7 +274,7 @@ input#search:focus {
 }
 
 button.primary-btn {
-  padding: 12px 20px;
+  padding: 10px 16px; /* 稍微缩小 padding 以适应窄屏 */
   border: none;
   background-color: var(--primary);
   color: white;
@@ -184,6 +282,9 @@ button.primary-btn {
   cursor: pointer;
   font-weight: 600;
   transition: transform 0.2s, opacity 0.2s;
+  white-space: nowrap; /* 禁止换行 */
+  flex-shrink: 0; /* 禁止被挤压 */
+  font-size: 0.9rem; /* 统一缩小按钮字号 */
 }
 
 button.primary-btn:active {
@@ -215,6 +316,7 @@ button.primary-btn:active {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* 允许换行以防极端窄屏 */
 }
 
 .library-actions input {

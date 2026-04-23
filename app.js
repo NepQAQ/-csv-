@@ -234,7 +234,7 @@ function switchMode(mode) {
   // 统一转换模式名称
   if (mode === 'flashcards') mode = 'flashcard'
 
-  const modes = ['search', 'flashcard', 'library']
+  const modes = ['search', 'flashcard', 'library', 'gojuon']
   modes.forEach(m => {
     const el = document.getElementById(`${m}-mode`)
     const tab = document.getElementById(`${m}Tab`)
@@ -246,6 +246,8 @@ function switchMode(mode) {
     renderLibraryList()
   } else if (mode === 'search') {
     doSearch()
+  } else if (mode === 'gojuon') {
+    renderGojuonGrid('seion')
   }
 }
 
@@ -456,9 +458,15 @@ function doSearch() {
 // 语音播放
 function playAudio(text) {
   if (!text) return
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`
+  // 使用有道 TTS 作为中国大陆友好方案
+  const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`
   const audio = new Audio(url)
-  audio.play().catch(e => console.error("Audio playback failed", e))
+  audio.play().catch(e => {
+    console.error("Audio playback failed, trying alternative...", e)
+    // 备选方案：Google TTS (如果上面的失败)
+    const altUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`
+    new Audio(altUrl).play().catch(err => console.error("All audio sources failed", err))
+  })
 }
 
 function playCurrentWord() {
@@ -575,4 +583,71 @@ function updateFlashcardHeader() {
   } else {
     progress.textContent = `当前词库: ${currentLibraryName} (${words.length} 词)`
   }
+}
+
+// 五十音图数据
+const GOJUON_DATA = {
+  seion: [
+    ['あ', 'ア', 'a'], ['い', 'イ', 'i'], ['う', 'ウ', 'u'], ['え', 'エ', 'e'], ['お', 'オ', 'o'],
+    ['か', 'カ', 'ka'], ['き', 'キ', 'ki'], ['く', 'ク', 'ku'], ['け', 'ケ', 'ke'], ['こ', 'コ', 'ko'],
+    ['さ', 'サ', 'sa'], ['し', 'シ', 'shi'], ['す', 'ス', 'su'], ['せ', 'セ', 'se'], ['そ', 'ソ', 'so'],
+    ['た', 'タ', 'ta'], ['ち', 'チ', 'chi'], ['つ', 'ツ', 'tsu'], ['て', 'テ', 'te'], ['と', 'ト', 'to'],
+    ['な', 'ナ', 'na'], ['に', 'ニ', 'ni'], ['ぬ', 'ヌ', 'nu'], ['ね', 'ネ', 'ne'], ['の', 'ノ', 'no'],
+    ['は', 'ハ', 'ha'], ['ひ', 'ヒ', 'hi'], ['ふ', 'フ', 'fu'], ['へ', 'ヘ', 'he'], ['ほ', 'ホ', 'ho'],
+    ['ま', 'マ', 'ma'], ['み', 'ミ', 'mi'], ['む', 'ム', 'mu'], ['め', 'メ', 'me'], ['も', 'モ', 'mo'],
+    ['や', 'ヤ', 'ya'], null, ['ゆ', 'ユ', 'yu'], null, ['よ', 'ヨ', 'yo'],
+    ['ら', 'ラ', 'ra'], ['り', 'リ', 'ri'], ['る', 'ル', 'ru'], ['れ', 'レ', 're'], ['ろ', 'ロ', 'ro'],
+    ['わ', 'ワ', 'wa'], null, null, null, ['を', 'ヲ', 'wo'],
+    ['ん', 'ン', 'n'], null, null, null, null
+  ],
+  dakuon: [
+    ['が', 'ガ', 'ga'], ['ぎ', 'ギ', 'gi'], ['ぐ', 'グ', 'gu'], ['げ', 'ゲ', 'ge'], ['ご', 'ゴ', 'go'],
+    ['ざ', 'ザ', 'za'], ['じ', 'ジ', 'ji'], ['ず', 'ズ', 'zu'], ['ぜ', 'ゼ', 'ze'], ['ぞ', 'ゾ', 'zo'],
+    ['だ', 'ダ', 'da'], ['ぢ', 'ヂ', 'ji'], ['づ', 'ヅ', 'zu'], ['で', 'デ', 'de'], ['ど', 'ド', 'do'],
+    ['ば', 'バ', 'ba'], ['び', 'ビ', 'bi'], ['ぶ', 'ブ', 'bu'], ['べ', 'ベ', 'be'], ['ぼ', 'ボ', 'bo'],
+    ['ぱ', 'パ', 'pa'], ['ぴ', 'ピ', 'pi'], ['ぷ', 'プ', 'pu'], ['ぺ', 'ペ', 'pe'], ['ぽ', 'ポ', 'po']
+  ],
+  youon: [
+    ['きゃ', 'キャ', 'kya'], ['きゅ', 'キュ', 'kyu'], ['きょ', 'キョ', 'kyo'], null, null,
+    ['しゃ', 'シャ', 'sha'], ['しゅ', 'シュ', 'shu'], ['しょ', 'ショ', 'sho'], null, null,
+    ['ちゃ', 'チャ', 'cha'], ['ちゅ', 'チュ', 'chu'], ['ちょ', 'チョ', 'cho'], null, null,
+    ['にゃ', 'ニャ', 'nya'], ['にゅ', 'ニュ', 'nyu'], ['にょ', 'ニョ', 'nyo'], null, null,
+    ['ひゃ', 'ヒャ', 'hya'], ['ひゅ', 'ヒュ', 'hyu'], ['ひょ', 'ヒョ', 'hyo'], null, null,
+    ['みゃ', 'ミャ', 'mya'], ['みゅ', 'ミュ', 'myu'], ['みょ', 'ミョ', 'myo'], null, null,
+    ['りゃ', 'リャ', 'rya'], ['りゅ', 'リュ', 'ryu'], ['りょ', 'リョ', 'ryo'], null, null,
+    ['ぎゃ', 'ギャ', 'gya'], ['ぎゅ', 'ギュ', 'gyu'], ['ぎょ', 'ギョ', 'gyo'], null, null,
+    ['じゃ', 'ジャ', 'ja'], ['じゅ', 'ジュ', 'ju'], ['じょ', 'ジョ', 'jo'], null, null,
+    ['びゃ', 'ビャ', 'bya'], ['びゅ', 'ビュ', 'byu'], ['びょ', 'ビョ', 'byo'], null, null,
+    ['ぴゃ', 'ピャ', 'pya'], ['ぴゅ', 'ピュ', 'pyu'], ['ぴょ', 'ピョ', 'pyo'], null, null
+  ]
+}
+
+function renderGojuonGrid(type) {
+  const container = document.getElementById("gojuon-grid")
+  const data = GOJUON_DATA[type]
+  
+  container.innerHTML = data.map(item => {
+    if (!item) return '<div class="gojuon-item empty"></div>'
+    const [hira, kata, roma] = item
+    return `
+      <div class="gojuon-item" onclick="playAudio('${hira}')">
+        <div class="kana-row">
+          <span class="kana-main">${hira}</span>
+          <span class="kana-sub">${kata}</span>
+          <span class="kana-romaji">${roma}</span>
+        </div>
+      </div>
+    `
+  }).join("")
+}
+
+function switchGojuonType(type) {
+  // 更新按钮状态
+  const btns = document.querySelectorAll('.gojuon-tabs button')
+  btns.forEach(btn => {
+    const btnType = btn.getAttribute('onclick').match(/'(\w+)'/)[1]
+    btn.className = btnType === type ? 'active' : ''
+  })
+  
+  renderGojuonGrid(type)
 }
