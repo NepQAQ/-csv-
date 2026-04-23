@@ -22,10 +22,6 @@
     </div>
   </div>
 
-  <div id="library-info" class="current-library-bar">
-    当前词库: <span id="current-library-name">未选择</span>
-  </div>
-
   <div id="gojuon-mode" style="display: none;">
     <div class="gojuon-container">
       <div class="gojuon-tabs">
@@ -40,8 +36,15 @@
   </div>
 
   <div id="search-mode">
-    <div class="controls">
-      <input type="text" id="search" placeholder="输入日语或中文搜索..." oninput="doSearch()">
+    <div class="search-controls">
+      <div class="search-input-wrapper">
+        <input type="text" id="search" placeholder="输入日语或中文搜索..." oninput="handleSearchInput()">
+        <button id="searchBtn" class="search-btn" onclick="doOnlineSearch()" style="display: none;">翻译</button>
+      </div>
+      <div class="search-source-toggle">
+        <button id="localSearchTab" class="active" onclick="setSearchSource('local')">词库</button>
+        <button id="onlineSearchTab" onclick="setSearchSource('online')">联网</button>
+      </div>
     </div>
     <div id="results">
       <div class="empty-state">
@@ -67,7 +70,11 @@
 
   <div id="flashcard-mode" style="display: none;">
     <div class="flashcard-header">
-      <span id="progress">0 / 0</span>
+      <div class="flashcard-lib-selector">
+        <select id="flashcardLibrarySelect" onchange="changeFlashcardLibrary()">
+          <!-- 动态填充已启用的词库 -->
+        </select>
+      </div>
       <div class="flashcard-options">
         <div class="autoplay-control">
           <input type="checkbox" id="autoplayCheck" onchange="toggleAutoplay()">
@@ -76,6 +83,10 @@
         <button id="modeToggleBtn" class="secondary-btn" onclick="toggleCardMode()">日 → 中</button>
         <button class="primary-btn" onclick="startFlashcards()">打乱并开始</button>
       </div>
+    </div>
+    
+    <div class="flashcard-status">
+      <span id="progress">0 / 0</span>
     </div>
     
     <div id="card" class="card" onclick="toggleAnswer()">

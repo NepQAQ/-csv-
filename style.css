@@ -15,7 +15,6 @@
   --tab-inactive: #f1f3f5;
   --lib-item-hover: #f8fbff;
   --lib-active-bg: #eef5ff;
-  --lib-bar-bg: var(--primary);
 }
 
 [data-theme="dark"] {
@@ -29,7 +28,6 @@
   --tab-inactive: #2d2d2d;
   --lib-item-hover: #2d2d2d;
   --lib-active-bg: #1a2a44;
-  --lib-bar-bg: #2d2d2d;
 }
 
 html, body {
@@ -76,18 +74,6 @@ body {
   margin: 0;
   font-size: 1.2rem; /* 缩小标题 */
   color: var(--primary);
-}
-
-.current-library-bar {
-  background-color: var(--lib-bar-bg);
-  color: white;
-  text-align: center;
-  padding: 5px 10px; /* 缩小 padding */
-  font-size: 0.8rem; /* 缩小字号 */
-  font-weight: 600;
-  width: 100%;
-  box-sizing: border-box;
-  transition: background-color 0.3s;
 }
 
 .highlight {
@@ -251,6 +237,121 @@ body {
   .gojuon-grid { gap: 5px; }
 }
 
+.search-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.search-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-source-toggle {
+  display: flex;
+  background: var(--tab-inactive);
+  padding: 3px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.search-source-toggle button {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--text-sub);
+  transition: all 0.2s;
+}
+
+.search-source-toggle button.active {
+  background: var(--card-bg);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.online-result {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+}
+
+.online-label {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.online-text {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.online-reading {
+  font-size: 0.9rem;
+  color: var(--primary);
+  background: var(--tab-inactive);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.online-examples {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--tab-inactive);
+}
+
+.example-item {
+  margin-bottom: 12px;
+}
+
+.example-ja {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.example-zh {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  display: block;
+}
+
+.loading-dots:after {
+  content: ' .';
+  animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ' .'; }
+  40% { content: ' ..'; }
+  60% { content: ' ...'; }
+  80%, 100% { content: ''; }
+}
+
 .controls {
   display: flex;
   gap: 12px;
@@ -358,6 +459,71 @@ button.primary-btn:active {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.status-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-badge.enabled {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.status-badge.disabled {
+  background-color: rgba(108, 117, 125, 0.15);
+  color: #6c757d;
+}
+
+.btn-toggle-enabled {
+  padding: 6px 12px;
+  border: 1px solid #e1e4e8;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--card-bg);
+  color: var(--text-sub);
+  transition: all 0.2s;
+}
+
+.btn-toggle-enabled.active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.library-card.disabled {
+  opacity: 0.7;
+  background-color: var(--tab-inactive);
+}
+
+/* 刷词模式库选择 */
+.flashcard-lib-selector {
+  flex: 1;
+  max-width: 150px;
+}
+
+#flashcardLibrarySelect {
+  width: 100%;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--tab-inactive);
+  background: var(--card-bg);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.flashcard-status {
+  width: 100%;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 0.85rem;
+  margin-top: -10px;
 }
 
 .lib-name {
