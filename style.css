@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --primary: #4a90e2;
   --success: #2ecc71;
@@ -6,6 +10,32 @@
   --text-main: #2c3e50;
   --text-sub: #7f8c8d;
   --shadow: 0 8px 30px rgba(0,0,0,0.08);
+  --header-bg: #ffffff;
+  --input-bg: #ffffff;
+  --tab-inactive: #f1f3f5;
+  --lib-item-hover: #f8fbff;
+  --lib-active-bg: #eef5ff;
+  --lib-bar-bg: var(--primary);
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-main: #e0e0e0;
+  --text-sub: #a0a0a0;
+  --shadow: 0 8px 30px rgba(0,0,0,0.3);
+  --header-bg: #1e1e1e;
+  --input-bg: #2d2d2d;
+  --tab-inactive: #2d2d2d;
+  --lib-item-hover: #2d2d2d;
+  --lib-active-bg: #1a2a44;
+  --lib-bar-bg: #2d2d2d;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 body {
@@ -17,30 +47,78 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .header {
-  background: var(--card-bg);
-  padding: 20px 15px;
+  background: var(--header-bg);
+  padding: 15px 15px 20px 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.3s;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .header h2 {
-  margin: 0 0 15px 0;
+  margin: 0;
   font-size: 1.4rem;
   color: var(--primary);
+}
+
+.current-library-bar {
+  background-color: var(--lib-bar-bg);
+  color: white;
   text-align: center;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.highlight {
+  background-color: rgba(74, 144, 226, 0.2);
+  color: var(--primary);
+  padding: 0 2px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background-color: var(--tab-inactive);
 }
 
 .tabs {
   display: flex;
-  background: #f1f3f5;
+  background: var(--tab-inactive);
   padding: 4px;
   border-radius: 12px;
-  max-width: 300px;
+  max-width: 450px;
   margin: 0 auto;
 }
 
@@ -63,7 +141,7 @@ body {
   font-weight: 600;
 }
 
-#search-mode, #flashcard-mode {
+#search-mode, #flashcard-mode, #library-mode {
   padding: 20px 15px;
   max-width: 600px;
   margin: 0 auto;
@@ -85,7 +163,8 @@ input#search {
   font-size: 1rem;
   outline: none;
   transition: border-color 0.3s;
-  background: var(--card-bg);
+  background: var(--input-bg);
+  color: var(--text-main);
 }
 
 input#search:focus {
@@ -120,6 +199,145 @@ button.primary-btn:active {
   transform: translateY(2px);
 }
 
+/* 词库管理样式 */
+.library-manager {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.library-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.library-actions input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: var(--input-bg);
+  color: var(--text-main);
+}
+
+/* 词库卡片重构样式 */
+.library-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.library-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.1);
+  background: var(--lib-active-bg);
+}
+
+.lib-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lib-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lib-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.lib-count {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.btn-select {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #f1f3f5;
+  color: var(--text-sub);
+  transition: all 0.2s;
+}
+
+.btn-select.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+.lib-card-actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tab-inactive);
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn i {
+  font-style: normal;
+  font-size: 1.2rem;
+}
+
+.action-btn span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.action-btn:hover {
+  background-color: var(--tab-inactive);
+}
+
+.action-btn.btn-import { color: #2ecc71; }
+.action-btn.btn-export { color: var(--primary); }
+.action-btn.btn-rename { color: #ffc107; }
+.action-btn.btn-reset { color: #6c757d; }
+.action-btn.btn-delete { color: #f44336; }
+
+/* 移动端适配 */
+@media (max-width: 480px) {
+  .lib-card-actions {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .action-btn span {
+    font-size: 0.7rem;
+  }
+  
+  .lib-name {
+    font-size: 1rem;
+  }
+}
+
 /* 刷词卡片样式 */
 #flashcard-mode {
   display: none;
@@ -137,12 +355,55 @@ button.primary-btn:active {
   font-size: 0.9rem;
 }
 
+.flashcard-options {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.autoplay-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  background: var(--tab-inactive);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.autoplay-control input {
+  margin: 0;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--primary);
+  background: var(--card-bg);
+  color: var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+  background: var(--lib-active-bg);
+}
+
+.secondary-btn:active {
+  transform: scale(0.95);
+}
+
 .card {
   width: 100%;
   max-width: 400px;
   aspect-ratio: 3 / 4;
   perspective: 1000px;
   cursor: pointer;
+  touch-action: pan-y; /* 允许纵向滚动，禁止系统横向滚动以配合手势 */
 }
 
 .card-inner {
@@ -182,7 +443,7 @@ button.primary-btn:active {
 }
 
 .voice-btn {
-  background: #f1f3f5;
+  background: var(--tab-inactive);
   border: none;
   border-radius: 50%;
   width: 44px;
@@ -194,10 +455,11 @@ button.primary-btn:active {
   justify-content: center;
   transition: all 0.2s;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  color: var(--text-main);
 }
 
 .voice-btn:hover {
-  background: #e9ecef;
+  background: var(--lib-item-hover);
   transform: scale(1.1);
 }
 
@@ -219,6 +481,7 @@ button.primary-btn:active {
   padding: 5px;
   opacity: 0.6;
   transition: opacity 0.2s;
+  color: var(--text-main);
 }
 
 .mini-voice-btn:hover {
@@ -227,7 +490,7 @@ button.primary-btn:active {
 
 .card-back {
   transform: rotateY(180deg);
-  background-color: #f8fbff;
+  background-color: var(--card-bg);
 }
 
 #word-main {
@@ -253,34 +516,39 @@ button.primary-btn:active {
 #word-reading {
   font-size: 1.3rem;
   color: var(--text-sub);
-  background: #f0f4f8;
+  background: var(--tab-inactive);
   padding: 4px 12px;
   border-radius: 8px;
 }
 
 .card-controls {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   max-width: 400px;
 }
 
 .card-controls button {
   flex: 1;
-  padding: 15px;
+  padding: 12px;
   border: none;
-  background-color: #e1e4e8;
+  background-color: var(--tab-inactive);
   color: var(--text-main);
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.2s;
 }
 
 .card-controls button.next-btn {
   background-color: var(--primary);
   color: white;
+}
+
+.card-controls button.mark-btn {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
 }
 
 .card-controls button:active {
@@ -295,4 +563,57 @@ button.primary-btn:active {
 
 .empty-state p {
   margin-bottom: 20px;
+}
+
+/* 切题滑动动画 */
+.swipe-left {
+  animation: slideOutLeft 0.3s forwards;
+}
+
+.swipe-right {
+  animation: slideOutRight 0.3s forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.3s forwards;
+}
+
+@keyframes slideOutLeft {
+  to {
+    transform: translateX(-150%) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  to {
+    transform: translateX(150%) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
 }

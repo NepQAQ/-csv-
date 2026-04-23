@@ -10,30 +10,58 @@
 
 <body>
   <div class="header">
-    <h2>日语刷词 PWA</h2>
+    <div class="header-top">
+      <h2>日语刷词 PWA</h2>
+      <button id="themeToggle" class="icon-btn" onclick="toggleTheme()" title="切换深色模式">🌙</button>
+    </div>
     <div class="tabs">
       <button id="searchTab" class="active" onclick="switchMode('search')">搜索模式</button>
       <button id="flashcardTab" onclick="switchMode('flashcards')">刷词模式</button>
+      <button id="libraryTab" onclick="switchMode('library')">词库管理</button>
     </div>
+  </div>
+
+  <div id="library-info" class="current-library-bar">
+    当前词库: <span id="current-library-name">未选择</span>
   </div>
 
   <div id="search-mode">
     <div class="controls">
-      <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSV()">
-      <button class="primary-btn" onclick="document.getElementById('csvFile').click()">导入 CSV</button>
       <input type="text" id="search" placeholder="输入日语或中文搜索..." oninput="doSearch()">
     </div>
     <div id="results">
       <div class="empty-state">
-        <p>还没有单词，请先导入 CSV 文件</p>
+        <p>还没有单词，请在“词库管理”中创建并导入 CSV 文件</p>
       </div>
+    </div>
+  </div>
+
+  <div id="library-mode" style="display: none;">
+    <div class="library-manager">
+      <div class="library-actions">
+        <input type="text" id="newLibraryName" placeholder="输入新词库名称">
+        <button class="primary-btn" onclick="createLibrary()">创建新词库</button>
+      </div>
+      <hr>
+      <h3>词库列表</h3>
+      <div id="library-list">
+        <!-- 词库列表项将通过 JS 动态生成 -->
+      </div>
+      <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSVToLibrary()">
     </div>
   </div>
 
   <div id="flashcard-mode" style="display: none;">
     <div class="flashcard-header">
       <span id="progress">0 / 0</span>
-      <button class="primary-btn" onclick="startFlashcards()">打乱并开始</button>
+      <div class="flashcard-options">
+        <div class="autoplay-control">
+          <input type="checkbox" id="autoplayCheck" onchange="toggleAutoplay()">
+          <label for="autoplayCheck">自动播放</label>
+        </div>
+        <button id="modeToggleBtn" class="secondary-btn" onclick="toggleCardMode()">日 → 中</button>
+        <button class="primary-btn" onclick="startFlashcards()">打乱并开始</button>
+      </div>
     </div>
     
     <div id="card" class="card" onclick="toggleAnswer()">
@@ -42,8 +70,8 @@
           <div class="voice-btn-container">
             <button class="voice-btn" onclick="event.stopPropagation(); playCurrentWord()">🔊</button>
           </div>
-          <div id="word-main">点击开始</div>
-          <div id="word-sub"></div>
+          <div id="word-main">点击卡片开始</div>
+          <div id="word-sub">或点击上方打乱按钮</div>
         </div>
         <div class="card-back">
           <div id="word-chinese"></div>
@@ -54,6 +82,7 @@
 
     <div class="card-controls">
       <button onclick="prevCard()">上一个</button>
+      <button class="mark-btn" onclick="markAsWrong()">记不住 ❌</button>
       <button class="next-btn" onclick="nextCard()">下一个</button>
     </div>
   </div>
